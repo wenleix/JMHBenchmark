@@ -110,9 +110,15 @@ questions.
                             <arguments>
                                 <argument>-DoutputDirectory=benchmark_outputs</argument>
                                 <argument>-Dmyproperty=myvalue</argument>
+                                <!--
+                                <argument>-Djava.lang.invoke.MethodHandle.CUSTOMIZE_THRESHOLD=-1</argument>
+                                -->
                                 <argument>-classpath</argument>
                                 <classpath />
                                 <argument>benchmark.lambdacapture.LambdaMetaFactoryBenchmark</argument>
+                                <!--
+                                <argument>benchmark.lambdacapture.BindToBenchmark</argument>
+                                -->
                             </arguments>
                         </configuration>
                     </plugin>

@@ -20,15 +20,15 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("MethodMayBeStatic")
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 10)
-@Fork(2)
+@Fork(10)
 @Measurement(iterations = 10)
-@BenchmarkMode(Mode.Throughput)
+@BenchmarkMode(Mode.AverageTime)
 public class BindToBenchmark_MoreInvoke
 {
     private static final int NUM_ROWS = 100;
 
     @Benchmark
-    @OperationsPerInvocation(NUM_ROWS * 100_000)
+    @OperationsPerInvocation(NUM_ROWS)
     public void invoke100k()
             throws Throwable
     {
@@ -44,7 +44,7 @@ public class BindToBenchmark_MoreInvoke
     }
 
     @Benchmark
-    @OperationsPerInvocation(NUM_ROWS * 1_000_000)
+    @OperationsPerInvocation(NUM_ROWS)
     public void invoke1m()
             throws Throwable
     {
@@ -60,7 +60,7 @@ public class BindToBenchmark_MoreInvoke
     }
 
     @Benchmark
-    @OperationsPerInvocation(NUM_ROWS * 10_000_000)
+    @OperationsPerInvocation(NUM_ROWS)
     public void invoke10m()
             throws Throwable
     {
