@@ -1,14 +1,12 @@
 package benchmark.lambdacapture;
 
+import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
 import org.openjdk.jmh.annotations.Measurement;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.OperationsPerInvocation;
 import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
@@ -28,7 +26,8 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.Throughput)
 public class BindToBenchmark
 {
-    private static final int NUM_ROWS = 100_000;
+    private static final int NUM_ROWS = 10_000;
+    private static final int NUM_SMALL_ROWS = 10;
 
     @Benchmark
     @OperationsPerInvocation(NUM_ROWS * 1)
@@ -78,6 +77,39 @@ public class BindToBenchmark
             }
         }
     }
+
+    @Benchmark
+    @OperationsPerInvocation(NUM_ROWS * 1000)
+    public void invoke1000()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 1000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(BindToBenchmark.class.getMethod("originalMethod", BindToBenchmark.class, Long.class, Long.class));
+        for (int i = 0; i < NUM_ROWS; i++) {
+            MethodHandle bindedMethodHandle = MethodHandles.insertArguments(methodHandle, 0, this, Long.valueOf(i));
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = (Long) bindedMethodHandle.invokeExact(Long.valueOf(j));
+            }
+        }
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(NUM_ROWS * 10_000)
+    public void invoke10000()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 10_000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(BindToBenchmark.class.getMethod("originalMethod", BindToBenchmark.class, Long.class, Long.class));
+        for (int i = 0; i < NUM_ROWS; i++) {
+            MethodHandle bindedMethodHandle = MethodHandles.insertArguments(methodHandle, 0, this, Long.valueOf(i));
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = (Long) bindedMethodHandle.invokeExact(Long.valueOf(j));
+            }
+        }
+    }
+
 
     public static void main(String[] args)
             throws Throwable
