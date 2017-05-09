@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class BindToBenchmark
 {
     private static final int NUM_ROWS = 10_000;
+    private static final int NUM_LESS_ROWS = 100;
 
     @Benchmark
     @OperationsPerInvocation(NUM_ROWS)
@@ -95,7 +96,7 @@ public class BindToBenchmark
 
     @Benchmark
     @OperationsPerInvocation(NUM_ROWS)
-    public void invoke10000()
+    public void invoke10k()
             throws Throwable
     {
         final int INVOKE_TIME = 10_000;
@@ -109,6 +110,53 @@ public class BindToBenchmark
         }
     }
 
+    @Benchmark
+    @OperationsPerInvocation(NUM_ROWS)
+    public void invoke100k()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 100_000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(BindToBenchmark.class.getMethod("originalMethod", BindToBenchmark.class, Long.class, Long.class));
+        for (int i = 0; i < NUM_ROWS; i++) {
+            MethodHandle bindedMethodHandle = MethodHandles.insertArguments(methodHandle, 0, this, Long.valueOf(i));
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = (Long) bindedMethodHandle.invokeExact(Long.valueOf(j));
+            }
+        }
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(NUM_LESS_ROWS)
+    public void invoke1m()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 1_000_000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(BindToBenchmark.class.getMethod("originalMethod", BindToBenchmark.class, Long.class, Long.class));
+        for (int i = 0; i < NUM_LESS_ROWS; i++) {
+            MethodHandle bindedMethodHandle = MethodHandles.insertArguments(methodHandle, 0, this, Long.valueOf(i));
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = (Long) bindedMethodHandle.invokeExact(Long.valueOf(j));
+            }
+        }
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(NUM_LESS_ROWS)
+    public void invoke10m()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 10_000_000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(BindToBenchmark.class.getMethod("originalMethod", BindToBenchmark.class, Long.class, Long.class));
+        for (int i = 0; i < NUM_LESS_ROWS; i++) {
+            MethodHandle bindedMethodHandle = MethodHandles.insertArguments(methodHandle, 0, this, Long.valueOf(i));
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = (Long) bindedMethodHandle.invokeExact(Long.valueOf(j));
+            }
+        }
+    }
 
     public static void main(String[] args)
             throws Throwable

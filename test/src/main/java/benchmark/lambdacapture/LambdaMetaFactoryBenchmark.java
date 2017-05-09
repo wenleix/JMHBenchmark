@@ -29,6 +29,7 @@ import java.util.function.Function;
 public class LambdaMetaFactoryBenchmark
 {
     private static final int NUM_ROWS = 10_000;
+    private static final int NUM_LESS_ROWS = 100;
 
     @Benchmark
     @OperationsPerInvocation(NUM_ROWS)
@@ -140,7 +141,7 @@ public class LambdaMetaFactoryBenchmark
 
     @Benchmark
     @OperationsPerInvocation(NUM_ROWS)
-    public void invoke10000()
+    public void invoke10k()
             throws Throwable
     {
         final int INVOKE_TIME = 10_000;
@@ -157,6 +158,87 @@ public class LambdaMetaFactoryBenchmark
         ).getTarget();
 
         for (int i = 0; i < NUM_ROWS; i++) {
+            Function<Long, Long> capturedLambda = (Function<Long, Long>) factory.invokeExact(this, Long.valueOf(i));
+
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = capturedLambda.apply(Long.valueOf(j));
+            }
+        }
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(NUM_LESS_ROWS)
+    public void invoke100k()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 100_000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryBenchmark.class, Long.class, Long.class));
+
+        MethodHandle factory = LambdaMetafactory.metafactory(
+                MethodHandles.lookup(),
+                "apply",
+                MethodType.methodType(Function.class, LambdaMetaFactoryBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(Object.class, Object.class),              // arg2 -> ret, after type erasure
+                methodHandle,                                                   // Original method, (arg1, arg2) -> ret
+                MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
+        ).getTarget();
+
+        for (int i = 0; i < NUM_LESS_ROWS; i++) {
+            Function<Long, Long> capturedLambda = (Function<Long, Long>) factory.invokeExact(this, Long.valueOf(i));
+
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = capturedLambda.apply(Long.valueOf(j));
+            }
+        }
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(NUM_LESS_ROWS)
+    public void invoke1m()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 1_000_000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryBenchmark.class, Long.class, Long.class));
+
+        MethodHandle factory = LambdaMetafactory.metafactory(
+                MethodHandles.lookup(),
+                "apply",
+                MethodType.methodType(Function.class, LambdaMetaFactoryBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(Object.class, Object.class),              // arg2 -> ret, after type erasure
+                methodHandle,                                                   // Original method, (arg1, arg2) -> ret
+                MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
+        ).getTarget();
+
+        for (int i = 0; i < NUM_LESS_ROWS; i++) {
+            Function<Long, Long> capturedLambda = (Function<Long, Long>) factory.invokeExact(this, Long.valueOf(i));
+
+            for (int j = 0; j < INVOKE_TIME; j++) {
+                Long ret = capturedLambda.apply(Long.valueOf(j));
+            }
+        }
+    }
+
+    @Benchmark
+    @OperationsPerInvocation(NUM_LESS_ROWS)
+    public void invoke10m()
+            throws Throwable
+    {
+        final int INVOKE_TIME = 10_000_000;
+
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryBenchmark.class, Long.class, Long.class));
+
+        MethodHandle factory = LambdaMetafactory.metafactory(
+                MethodHandles.lookup(),
+                "apply",
+                MethodType.methodType(Function.class, LambdaMetaFactoryBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(Object.class, Object.class),              // arg2 -> ret, after type erasure
+                methodHandle,                                                   // Original method, (arg1, arg2) -> ret
+                MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
+        ).getTarget();
+
+        for (int i = 0; i < NUM_LESS_ROWS; i++) {
             Function<Long, Long> capturedLambda = (Function<Long, Long>) factory.invokeExact(this, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {

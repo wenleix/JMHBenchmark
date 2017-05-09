@@ -1,5 +1,8 @@
 package benchmark.lambdacapture;
 
+import benchmark.lambdacapture.misc.InstanceClass;
+import benchmark.lambdacapture.misc.UnaryPrestoFunction;
+import benchmark.lambdacapture.misc.UnaryPrestoFunctionJJ;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -30,6 +33,8 @@ public class LambdaMetaFactoryExactTypeBenchmark
 {
     private static final int NUM_ROWS = 10_000;
     private static final int NUM_LESS_ROWS = 100;
+    private static final InstanceClass fakedThis = new InstanceClass();
+
 
     @Benchmark
     @OperationsPerInvocation(NUM_ROWS)
@@ -38,19 +43,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 1;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),              // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -65,19 +70,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 10;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),              // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -92,19 +97,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 100;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),              // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -119,19 +124,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 1000;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),              // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -146,19 +151,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 10000;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),              // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -173,19 +178,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 100_000;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),              // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_LESS_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -200,19 +205,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 1_000_000;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),                  // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_LESS_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -227,19 +232,19 @@ public class LambdaMetaFactoryExactTypeBenchmark
     {
         final int INVOKE_TIME = 10_000_000;
 
-        MethodHandle methodHandle = MethodHandles.lookup().unreflect(LambdaMetaFactoryExactTypeBenchmark.class.getMethod("originalMethod", LambdaMetaFactoryExactTypeBenchmark.class, Long.class, Long.class));
+        MethodHandle methodHandle = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethod", InstanceClass.class, Long.class, Long.class));
 
         MethodHandle factory = LambdaMetafactory.metafactory(
                 MethodHandles.lookup(),
                 "apply",
-                MethodType.methodType(PrestoLongLongLambdaFunction.class, LambdaMetaFactoryExactTypeBenchmark.class, Long.class),    // arg1 -> CapturedLambda
+                MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
                 MethodType.methodType(Long.class, Long.class),                  // arg2 -> ret, after type erasure
                 methodHandle,                                                   // Original method, (arg1, arg2) -> ret
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
         for (int i = 0; i < NUM_LESS_ROWS; i++) {
-            PrestoLongLongLambdaFunction capturedLambda = (PrestoLongLongLambdaFunction) factory.invokeExact(this, Long.valueOf(i));
+            UnaryPrestoFunctionJJ capturedLambda = (UnaryPrestoFunctionJJ) factory.invokeExact(fakedThis, Long.valueOf(i));
 
             for (int j = 0; j < INVOKE_TIME; j++) {
                 Long ret = capturedLambda.apply(Long.valueOf(j));
@@ -256,14 +261,5 @@ public class LambdaMetaFactoryExactTypeBenchmark
                 .include(LambdaMetaFactoryExactTypeBenchmark.class.getSimpleName())
                 .build();
         new Runner(options).run();
-    }
-
-    public static Long originalMethod(LambdaMetaFactoryExactTypeBenchmark instance, Long a, Long b) {
-        return a + b;
-    }
-
-    interface PrestoLongLongLambdaFunction extends Function<Long, Long>
-    {
-        Long apply(Long x);
     }
 }
