@@ -12,6 +12,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.VerboseMode;
+import org.openjdk.jmh.runner.options.WarmupMode;
 
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
@@ -32,7 +33,6 @@ public class LambdaMetaFactoryBenchmark
     private static final int NUM_LESS_ROWS = 100;
 
     @Benchmark
-    @OperationsPerInvocation(NUM_ROWS)
     public void invoke1()
             throws Throwable
     {
@@ -49,12 +49,10 @@ public class LambdaMetaFactoryBenchmark
                 MethodType.methodType(Long.class, Long.class)                   // arg2 -> ret, original type
         ).getTarget();
 
-        for (int i = 0; i < NUM_ROWS; i++) {
-            Function<Long, Long> capturedLambda = (Function<Long, Long>) factory.invokeExact(this, Long.valueOf(i));
+        Function<Long, Long> capturedLambda = (Function<Long, Long>) factory.invokeExact(this, Long.valueOf(1));
 
-            for (int j = 0; j < INVOKE_TIME; j++) {
-                Long ret = capturedLambda.apply(Long.valueOf(j));
-            }
+        for (int j = 0; j < INVOKE_TIME; j++) {
+            Long ret = capturedLambda.apply(Long.valueOf(j));
         }
     }
 
@@ -253,7 +251,7 @@ public class LambdaMetaFactoryBenchmark
         // assure the benchmarks are valid before running
         Options options = new OptionsBuilder()
                 .verbosity(VerboseMode.NORMAL)
-                .include(LambdaMetaFactoryBenchmark.class.getSimpleName())
+                .include(LambdaMetaFactoryBenchmark.class.getSimpleName()).warmupMode(WarmupMode.BULK)
                 .build();
         new Runner(options).run();
     }
