@@ -132,7 +132,10 @@ public class BenchmarkLambdaCapture
         long sum = 0;
 
         for (int i = 0; i < data.numRows; i++) {
-            sum += data.unaryFunction[i].apply(Long.valueOf(i));
+            UnaryPrestoFunctionJJ func = data.unaryFunction[i];
+            for (int j = 0; j < data.numInvokes; j++) {
+                sum += func.apply(Long.valueOf(i));
+            }
         }
         return sum;
     }
@@ -144,7 +147,10 @@ public class BenchmarkLambdaCapture
         long sum = 0;
 
         for (int i = 0; i < data.numRows; i++) {
-            sum += data.capturedLambdas[i].apply(Long.valueOf(i));
+            UnaryPrestoFunctionJJ func = data.capturedLambdas[i];
+            for (int j = 0; j < data.numInvokes; j++) {
+                sum += func.apply(Long.valueOf(i));
+            }
         }
         return sum;
     }
@@ -156,7 +162,10 @@ public class BenchmarkLambdaCapture
         long sum = 0;
 
         for (int i = 0; i < data.numRows; i++) {
-            sum += (Long) data.bindedMethodHandle[i].invokeExact(Long.valueOf(i));
+            MethodHandle func = data.bindedMethodHandle[i];
+            for (int j = 0; j < data.numInvokes; j++) {
+                sum += (Long) func.invokeExact(Long.valueOf(i));
+            }
         }
         return sum;
     }
