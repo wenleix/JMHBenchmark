@@ -63,7 +63,7 @@ public class BenchmarkLambdaCapture
             mhJJJJ = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethodJJJJ", InstanceClass.class, Long.class, Long.class, Long.class));
             mhDJJ = MethodHandles.lookup().unreflect(InstanceClass.class.getMethod("originalMethodDJJ", InstanceClass.class, Double.class, Long.class));
 
-            MethodHandle factory1 = LambdaMetafactory.metafactory(
+            factory1 = LambdaMetafactory.metafactory(
                     MethodHandles.lookup(),
                     "apply",
                     MethodType.methodType(UnaryPrestoFunctionJJ.class, InstanceClass.class, Long.class),    // arg1 -> CapturedLambda
