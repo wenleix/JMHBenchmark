@@ -28,7 +28,7 @@ questions.
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.sample</groupId>
-    <artifactId>test</artifactId>
+    <artifactId>LambdaCaptureBenchmark</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
